@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_pro/models/user_model.dart';
+import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/providers/image_picker_provider.dart';
+import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_cropper/image_cropper.dart';
+import 'package:provider/provider.dart';
 
 class UserInformationScreen extends StatefulWidget {
   const UserInformationScreen({super.key});
@@ -17,56 +20,25 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
   File? finalFileImage;
   String userImage = '';
 
-void selectImage(bool fromCamera) async {
-  final pickedFile = await _imagePickerProvider.pickImage(
-    fromCamera: fromCamera,
-    onFail: (error) {
-      Fluttertoast.showToast(
-        msg: "Error picking image: $error",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
-    },
-  );
+  void selectImage(bool fromCamera) async {
+    final pickedFile = await _imagePickerProvider.pickImage(
+      fromCamera: fromCamera,
+      onFail: (error) {
+        Fluttertoast.showToast(
+          msg: "Error picking image: $error",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      },
+    );
 
-  if (pickedFile != null) {
-    // First assign the file
-    setState(() {
-      finalFileImage = pickedFile;
-    });
-
-    // Then crop the selected image
-    cropImage(pickedFile.path);
+    if (pickedFile != null) {
+      // First assign the file
+      setState(() {
+        finalFileImage = pickedFile;
+      });
+    }
   }
-}
-
-
-
-
-Future<void> cropImage(String imagePath) async {
-  final croppedFile = await ImageCropper().cropImage(
-    sourcePath: imagePath,
-    uiSettings: [
-      AndroidUiSettings(
-        toolbarTitle: 'Crop Image',
-        toolbarColor: Colors.deepOrange,
-        toolbarWidgetColor: Colors.white,
-        initAspectRatio: CropAspectRatioPreset.original,
-        lockAspectRatio: false,
-      ),
-      IOSUiSettings(
-        title: 'Crop Image',
-      ),
-    ],
-  );
-
-  if (croppedFile != null) {
-    setState(() {
-      finalFileImage = File(croppedFile.path);
-    });
-  }
-}
-
 
   void showBottomSheet() {
     showAboutDialog(
@@ -90,6 +62,52 @@ Future<void> cropImage(String imagePath) async {
         ),
       ],
     );
+  }
+
+  void saveUserDataToFireStore() async {
+    final authProvider = context.read<AuthenticationProvider>();
+    UserModel userModel = UserModel(
+      uid: authProvider.uid!,
+      name: _nameController.text.trim(),
+      phoneNumber: authProvider.phoneNumber!,
+      image: userImage,
+      token: '',
+      aboutMe: 'Hey there! I am using Flutter Chat Pro',
+      lastSeen: '',
+      createdAt: '',
+      isOnline: true,
+      friendsUIDs: [],
+      friendRequestsUIDs: [],
+      sentFriendRequestsUIDs: [],
+    );
+    if (finalFileImage == null || !finalFileImage!.existsSync()) {
+  Fluttertoast.showToast(msg: "Please select an image first!");
+  return;
+}
+    authProvider.saveUserDataToFireStore(
+      userModel: userModel,
+      fileImage: finalFileImage,
+      onSuccess: () {
+        Fluttertoast.showToast(
+          msg: "User information updated successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+        authProvider.saveUserDataToSecureStorage();
+        navigateToHomeScreen();
+      },
+      onError: (error) {
+        Fluttertoast.showToast(
+          msg: "Error updating user information: $error",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      },
+    );
+  }
+
+  void navigateToHomeScreen() {
+    Navigator.pushNamedAndRemoveUntil(context, AppConst.homeScreen, (route) => false);
   }
 
   @override
@@ -182,6 +200,11 @@ Future<void> cropImage(String imagePath) async {
                     borderSide: BorderSide(color: Colors.grey, width: 1.0),
                   ),
                 ),
+              ),
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: saveUserDataToFireStore,
+                child: Text('Submit'),
               ),
             ],
           ),

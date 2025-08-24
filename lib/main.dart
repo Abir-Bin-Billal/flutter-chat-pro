@@ -3,14 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:flutter_chat_pro/utils/app_routes.dart';
-import 'package:flutter_chat_pro/view/auth/login_screen.dart';
-import 'package:flutter_chat_pro/view/auth/otp_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
   runApp(
     MultiProvider(
       providers: [
@@ -33,7 +32,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      initialRoute: AppConst.userInformationScreen,
+      initialRoute: AppConst.homeScreen,
       routes: AppRoutes().appRoutes,
     );
   }

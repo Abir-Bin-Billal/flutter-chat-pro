@@ -24,28 +24,20 @@ class _OtpScreenState extends State<OtpScreen> {
       otp: otp,
       context: context,
       onSuccess: () async {
-        bool userExist = await authProvider.checkUserExist();
-        if (userExist) {
-          await authProvider.getUserDataFromFirestore();
-          await authProvider.saveUserDataToSecureStorage();
-          navigate(userExist: true);
-        } else {
-          navigate(userExist: false);
-        }
+      bool userExist = await authProvider.checkUserExist();
+  print("User exist: $userExist");
+
+  if (userExist) {
+    // Existing user → go to home
+    await authProvider.getUserDataFromFirestore();
+    await authProvider.saveUserDataToSecureStorage();
+    Navigator.pushReplacementNamed(context, AppConst.homeScreen);
+  } else {
+    // First-time user → go to user information screen
+    Navigator.pushReplacementNamed(context, AppConst.userInformationScreen);
+  }
       },
     );
-  }
-
-  void navigate({required bool userExist}) {
-    if (userExist) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        AppConst.homeScreen,
-        (route) => false,
-      );
-    } else {
-      Navigator.pushReplacementNamed(context, AppConst.userInformationScreen);
-    }
   }
 
   @override
