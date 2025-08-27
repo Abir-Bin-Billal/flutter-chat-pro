@@ -12,13 +12,13 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-
   @override
   void initState() {
     checkAuthentication();
     super.initState();
   }
-  void checkAuthentication()async{
+
+  void checkAuthentication() async {
     final authenticationProvider = context.read<AuthenticationProvider>();
     bool isSignedIn = await authenticationProvider.checkAuthenticationState();
     if (isSignedIn) {
@@ -27,6 +27,7 @@ class _LandingScreenState extends State<LandingScreen> {
       Navigator.pushReplacementNamed(context, AppConst.loginScreen);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

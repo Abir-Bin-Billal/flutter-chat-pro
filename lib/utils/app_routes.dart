@@ -5,6 +5,7 @@ import 'package:flutter_chat_pro/view/home/home_screen.dart';
 import 'package:flutter_chat_pro/view/info/user_information_screen.dart';
 import 'package:flutter_chat_pro/view/landing/landing_screen.dart';
 import 'package:flutter_chat_pro/view/profile/profile_screen.dart';
+import 'package:flutter_chat_pro/view/settings/settings_screen.dart';
 
 class AppRoutes {
   final appRoutes = {
@@ -14,5 +15,6 @@ class AppRoutes {
     AppConst.homeScreen: (context) => const HomeScreen(),
     AppConst.landingScreen: (context) => const LandingScreen(),
     AppConst.profileScreen: (context) => const ProfileScreen(),
+    AppConst.settingsScreen: (context) => const SettingsScreen(),
   };
 }
