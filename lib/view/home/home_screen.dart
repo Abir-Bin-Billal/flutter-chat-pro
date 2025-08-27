@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
+import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:flutter_chat_pro/view/chat_list/chat_list_screen.dart';
 import 'package:flutter_chat_pro/view/group/group_list_screen.dart';
 import 'package:flutter_chat_pro/view/people/people_screen.dart';
@@ -37,11 +38,17 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: CircleAvatar(
-              radius: 40,
-              backgroundImage: userModel!.image != null && userModel.image!.isNotEmpty
-                  ? MemoryImage(base64Decode(userModel.image!))
-                  : const AssetImage("assets/images/user.png") as ImageProvider,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, AppConst.profileScreen,
+                arguments: authProvider.userModel!.uid);
+              },
+              child: CircleAvatar(
+                radius: 40,
+                backgroundImage: userModel!.image != null && userModel.image!.isNotEmpty
+                    ? MemoryImage(base64Decode(userModel.image!))
+                    : const AssetImage("assets/images/user.png") as ImageProvider,
+              ),
             ),
           ),
         ],

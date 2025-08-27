@@ -235,6 +235,16 @@ Future<String> storeFileFirestore({
 }
 
 
+Stream<DocumentSnapshot> getUserStream({required String userID}) {
+  return firestore.collection(AppConst.users).doc(userID).snapshots();
 
+}
 
+Future logOut()async{
+  await auth.signOut();
+  FlutterSecureStorage().deleteAll();
+  userModel = null;
+  _uid = null;
+  notifyListeners();
+}
 }
