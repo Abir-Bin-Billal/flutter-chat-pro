@@ -122,6 +122,19 @@ class AuthenticationProvider extends ChangeNotifier {
     }
     return false;
   }
+  Future<bool> checkAuthenticationState()async{
+    bool isSignedIn =false;
+    await Future.delayed(const Duration(seconds: 2));
+    if(auth.currentUser != null){
+      _uid = auth.currentUser!.uid;
+      isSignedIn = true;
+      await getUserDataFromFirestore();
+      await saveUserDataToSecureStorage();
+    }else{
+      isSignedIn = false;
+    }
+    return isSignedIn;
+  }
 
   Future<void> getUserDataFromFirestore() async {
     DocumentSnapshot userDoc = await firestore
@@ -151,72 +164,77 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> saveUserDataToFireStore({
-    required UserModel userModel,
-    required File? fileImage,
-    required Function onSuccess,
-    required Function onError,
-  }) async {
-    if (fileImage == null) {
-      Fluttertoast.showToast(msg: "Please select an image first!");
-      return;
-    }
-    _isLoading = true;
-    notifyListeners();
-    try {
-      String imageBase64 = await storeFileFirestore(
-        file: fileImage,
-        uid: _uid!,
-      );
-      print("Image uploaded to Firestore successfully: $imageBase64");
-
-// Save Base64 string instead of URL
-userModel.image = imageBase64;
-      print("Image uploaded successfully: $imageBase64 and ${_uid!}");
-      userModel.image = imageBase64;
-      userModel.uid = _uid!;
-      userModel.lastSeen = DateTime.now().millisecondsSinceEpoch.toString();
-      userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
-      await firestore
-          .collection(AppConst.users)
-          .doc(userModel.uid)
-          .set(userModel.toJson());
-          this.userModel = userModel;
-          await saveUserDataToSecureStorage();
-      _isLoading = false;
-
-      onSuccess();
-      notifyListeners();
-    } on FirebaseException catch (e) {
-      print(e);
-      _isLoading = false;
-      notifyListeners();
-      onError(e.message ?? "Something went wrong");
-    }
-    ;
+Future<void> saveUserDataToFireStore({
+  required UserModel userModel,
+  required File? fileImage,
+  required Function onSuccess,
+  required Function onError,
+}) async {
+  if (fileImage == null) {
+    Fluttertoast.showToast(msg: "Please select an image first!");
+    return;
   }
+  _isLoading = true;
+  notifyListeners();
+
+  try {
+    // Upload to Firebase Storage and get download URL
+    String imageUrl = await storeFileFirestore(
+      file: fileImage,
+      uid: _uid!,
+    );
+
+    print("Image uploaded successfully: $imageUrl");
+
+    // Save download URL in Firestore
+    userModel.image = imageUrl;
+    userModel.uid = _uid!;
+    userModel.lastSeen = DateTime.now().millisecondsSinceEpoch.toString();
+    userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
+
+    await firestore
+        .collection(AppConst.users)
+        .doc(userModel.uid)
+        .set(userModel.toJson());
+
+    this.userModel = userModel;
+    await saveUserDataToSecureStorage();
+
+    _isLoading = false;
+    onSuccess();
+    notifyListeners();
+  } on FirebaseException catch (e) {
+    print(e);
+    _isLoading = false;
+    notifyListeners();
+    onError(e.message ?? "Something went wrong");
+  }
+}
+
 
 Future<String> storeFileFirestore({
   required File file,
   required String uid,
 }) async {
   try {
-    // Convert file → bytes → base64 string
+    // Convert file to Base64
     Uint8List imageBytes = await file.readAsBytes();
     String base64Image = base64Encode(imageBytes);
 
-    // Save to Firestore in a separate collection
+    // Save Base64 in Firestore
     await firestore.collection("userImages").doc(uid).set({
       "image": base64Image,
       "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
     });
 
-    // Return the base64 string as a pseudo "URL"
     return base64Image;
   } catch (e) {
     print("Upload to Firestore failed: $e");
     rethrow;
   }
 }
+
+
+
 
 }

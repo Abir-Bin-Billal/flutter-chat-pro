@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      initialRoute: AppConst.homeScreen,
+      initialRoute: AppConst.landingScreen,
       routes: AppRoutes().appRoutes,
     );
   }

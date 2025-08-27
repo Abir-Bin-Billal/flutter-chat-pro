@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/view/chat_list/chat_list_screen.dart';
@@ -13,18 +15,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final PageController _pageController = PageController(initialPage: 0);
   int _currentIndex = 0;
   final List<Widget> _pages = [
     ChatListScreen(),
     GroupListScreen(),
-    PeopleScreen()
+    PeopleScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-      final AuthenticationProvider authProvider = context.read<AuthenticationProvider>();
+    final AuthenticationProvider authProvider = context
+        .read<AuthenticationProvider>();
+    final userModel = authProvider.userModel;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -32,15 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("Flutter Chat Pro"),
         actions: [
           Padding(
-  padding: const EdgeInsets.only(right: 10),
-  child: CircleAvatar(
-    backgroundImage: authProvider.userModel?.image?.isNotEmpty == true
-        ? NetworkImage(authProvider.userModel!.image!)
-        : const AssetImage("assets/images/user.png") as ImageProvider,
-    backgroundColor: Colors.grey,
-  ),
-),
-
+            padding: const EdgeInsets.only(right: 10),
+            child: CircleAvatar(
+              radius: 40,
+              backgroundImage: userModel!.image != null && userModel.image!.isNotEmpty
+                  ? MemoryImage(base64Decode(userModel.image!))
+                  : const AssetImage("assets/images/user.png") as ImageProvider,
+            ),
+          ),
         ],
       ),
       body: PageView(
@@ -63,14 +66,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.chat_bubble_outline),
             label: "Chats",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: "Groups",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: "People",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: "Groups"),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: "People"),
         ],
       ),
     );
