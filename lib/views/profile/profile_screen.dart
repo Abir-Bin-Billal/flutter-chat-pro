@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -49,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ? Center(child: Text("No user selected"))
           : StreamBuilder(
               stream: context.read<AuthenticationProvider>().getUserStream(
-                userID: uid!,
+                userID: uid,
               ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -75,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundImage: userModel.image != null
-                              ? MemoryImage(base64Decode(userModel.image!))
+                              ? MemoryImage(base64Decode(userModel.image))
                               : null,
                           child: userModel.image == null
                               ? Icon(Icons.person, size: 80)
@@ -85,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      userModel.name ?? "Unknown User",
+                      userModel.name,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -94,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 10),
                     buildFriendRequestButton(
                       userModel: userModel,
-                      currentUser: currentUser!,
+                      currentUser: currentUser,
                     ),
                     const SizedBox(height: 10),
                     buildFriendButton(
@@ -103,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      userModel.phoneNumber ?? "No information available",
+                      userModel.phoneNumber,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -135,7 +137,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     Text(
-                      userModel.aboutMe ?? "No information available",
+                      userModel.aboutMe,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,

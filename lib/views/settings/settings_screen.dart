@@ -36,7 +36,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = context.read<AuthenticationProvider>().userModel;
-    final uid = ModalRoute.of(context)!.settings.arguments as String?;
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings"),

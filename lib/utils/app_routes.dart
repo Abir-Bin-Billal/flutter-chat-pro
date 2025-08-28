@@ -1,11 +1,11 @@
 import 'package:flutter_chat_pro/utils/app_const.dart';
-import 'package:flutter_chat_pro/view/auth/login_screen.dart';
-import 'package:flutter_chat_pro/view/auth/otp_screen.dart';
-import 'package:flutter_chat_pro/view/home/home_screen.dart';
-import 'package:flutter_chat_pro/view/info/user_information_screen.dart';
-import 'package:flutter_chat_pro/view/landing/landing_screen.dart';
-import 'package:flutter_chat_pro/view/profile/profile_screen.dart';
-import 'package:flutter_chat_pro/view/settings/settings_screen.dart';
+import 'package:flutter_chat_pro/views/auth/login_screen.dart';
+import 'package:flutter_chat_pro/views/auth/otp_screen.dart';
+import 'package:flutter_chat_pro/views/home/home_screen.dart';
+import 'package:flutter_chat_pro/views/info/user_information_screen.dart';
+import 'package:flutter_chat_pro/views/landing/landing_screen.dart';
+import 'package:flutter_chat_pro/views/profile/profile_screen.dart';
+import 'package:flutter_chat_pro/views/settings/settings_screen.dart';
 
 class AppRoutes {
   final appRoutes = {

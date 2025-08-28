@@ -1,17 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/models/user_model.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
-import 'package:flutter_chat_pro/view/auth/otp_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   bool _isLoading = false;
@@ -233,6 +230,13 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Stream<DocumentSnapshot> getUserStream({required String userID}) {
     return firestore.collection(AppConst.users).doc(userID).snapshots();
+  }
+
+  Stream<QuerySnapshot> getAllUserStream({required String userID}) {
+    return firestore
+        .collection(AppConst.users)
+        .where(AppConst.uid, isNotEqualTo: userID)
+        .snapshots();
   }
 
   Future logOut() async {

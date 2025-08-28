@@ -4,7 +4,6 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart' hide Size;
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/widgets/loading_view.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -99,7 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  print(" Number is :${_selectedCountry.phoneCode}${phoneController.text}");
+                  print(
+                    " Number is :${_selectedCountry.phoneCode}${phoneController.text}",
+                  );
                   authenticationProvider.signInWithPhoneNumber(
                     phoneNumber:
                         "${_selectedCountry.phoneCode}${phoneController.text}",
