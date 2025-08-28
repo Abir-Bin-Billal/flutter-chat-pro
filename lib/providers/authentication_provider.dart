@@ -49,7 +49,7 @@ class AuthenticationProvider extends ChangeNotifier {
         },
         verificationFailed: (FirebaseAuthException e) {
           _isLoading = false;
-          notifyListeners(); // 👈 add this
+          notifyListeners();
           Fluttertoast.showToast(msg: e.message ?? "Verification failed");
         },
         codeSent: (String verificationId, int? resendToken) {
@@ -69,13 +69,13 @@ class AuthenticationProvider extends ChangeNotifier {
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           _isLoading = false;
-          notifyListeners(); // 👈 add this
+          notifyListeners();
           print("Navigate to OTP screen");
         },
       );
     } catch (e) {
       _isLoading = false;
-      notifyListeners(); // 👈 add this
+      notifyListeners();
       Fluttertoast.showToast(msg: "Invalid phone number format");
     }
   }
@@ -176,12 +176,10 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Upload to Firebase Storage and get download URL
       String imageUrl = await storeFileFirestore(file: fileImage, uid: _uid!);
 
       print("Image uploaded successfully: $imageUrl");
 
-      // Save download URL in Firestore
       userModel.image = imageUrl;
       userModel.uid = _uid!;
       userModel.lastSeen = DateTime.now().millisecondsSinceEpoch.toString();
@@ -211,11 +209,9 @@ class AuthenticationProvider extends ChangeNotifier {
     required String uid,
   }) async {
     try {
-      // Convert file to Base64
       Uint8List imageBytes = await file.readAsBytes();
       String base64Image = base64Encode(imageBytes);
 
-      // Save Base64 in Firestore
       await firestore.collection("userImages").doc(uid).set({
         "image": base64Image,
         "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
@@ -250,6 +246,51 @@ class AuthenticationProvider extends ChangeNotifier {
         .collection(AppConst.users)
         .where(AppConst.uid, isNotEqualTo: userID)
         .snapshots();
+  }
+
+  Future cancelFriendRequest({required String friendID}) async {
+    try {
+      await firestore.collection(AppConst.users).doc(friendID).update({
+        AppConst.friendRequestsUIDS: FieldValue.arrayRemove([_uid]),
+      });
+      await firestore.collection(AppConst.users).doc(_uid).update({
+        AppConst.sentFriendRequestsUIDS: FieldValue.arrayRemove([friendID]),
+      });
+    } on FirebaseException catch (e) {
+      print("Error canceling friend request: $e");
+    }
+  }
+
+  Future<void> acceptFriendRequest({required String friendID}) async {
+    try {
+      await firestore.collection(AppConst.users).doc(friendID).update({
+        AppConst.friendsUIDS: FieldValue.arrayUnion([_uid]),
+      });
+      await firestore.collection(AppConst.users).doc(_uid).update({
+        AppConst.friendsUIDS: FieldValue.arrayUnion([friendID]),
+      });
+    } on FirebaseException catch (e) {
+      print("Error accepting friend request: $e");
+    }
+  }
+
+  Future<void> removeFriend({required String friendID}) async {
+    try {
+      await firestore.collection(AppConst.users).doc(friendID).update({
+        AppConst.friendsUIDS: FieldValue.arrayRemove([_uid]),
+        AppConst.sentFriendRequestsUIDS: FieldValue.arrayRemove([_uid]),
+        AppConst.friendRequestsUIDS: FieldValue.arrayRemove([_uid]),
+      });
+      await firestore.collection(AppConst.users).doc(_uid).update({
+        AppConst.friendsUIDS: FieldValue.arrayRemove([friendID]),
+        AppConst.sentFriendRequestsUIDS: FieldValue.arrayRemove([friendID]),
+        AppConst.friendRequestsUIDS: FieldValue.arrayRemove([friendID]),
+      });
+
+      print("Successfully unfriended $friendID");
+    } on FirebaseException catch (e) {
+      print("Error removing friend: $e");
+    }
   }
 
   Future logOut() async {

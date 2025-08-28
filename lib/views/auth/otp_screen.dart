@@ -24,18 +24,21 @@ class _OtpScreenState extends State<OtpScreen> {
       otp: otp,
       context: context,
       onSuccess: () async {
-      bool userExist = await authProvider.checkUserExist();
-  print("User exist: $userExist");
+        bool userExist = await authProvider.checkUserExist();
+        print("User exist: $userExist");
 
-  if (userExist) {
-    // Existing user → go to home
-    await authProvider.getUserDataFromFirestore();
-    await authProvider.saveUserDataToSecureStorage();
-    Navigator.pushReplacementNamed(context, AppConst.homeScreen);
-  } else {
-    // First-time user → go to user information screen
-    Navigator.pushReplacementNamed(context, AppConst.userInformationScreen);
-  }
+        if (userExist) {
+          // Existing user → go to home
+          await authProvider.getUserDataFromFirestore();
+          await authProvider.saveUserDataToSecureStorage();
+          Navigator.pushReplacementNamed(context, AppConst.homeScreen);
+        } else {
+          // First-time user → go to user information screen
+          Navigator.pushReplacementNamed(
+            context,
+            AppConst.userInformationScreen,
+          );
+        }
       },
     );
   }
@@ -47,8 +50,8 @@ class _OtpScreenState extends State<OtpScreen> {
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     final String verificationId = args['verificationId']!;
     final String phoneNumber = args['phoneNumber']!;
-    final AuthenticationProvider authenticationProvider =
-        context.watch<AuthenticationProvider>();
+    final AuthenticationProvider authenticationProvider = context
+        .watch<AuthenticationProvider>();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -98,25 +101,24 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
             ),
             SizedBox(height: 20),
-            authenticationProvider.isSuccessful?
-            Container(
-             height: 50,
-             width: 50,
-             decoration: BoxDecoration(
-              color: Colors.green,
-              shape: BoxShape.circle
-             ),
-              child: Icon(
-                Icons.done,
-                color: Colors.white,
-                size: 30,
-              ),
-            ) : SizedBox.shrink(),
+            authenticationProvider.isSuccessful
+                ? Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.done, color: Colors.white, size: 30),
+                  )
+                : SizedBox.shrink(),
             SizedBox(height: 5),
             authenticationProvider.isLoading
-                ? SizedBox.shrink():
-                Text("Didn't receive the OTP? Resend", style: TextStyle(color: Colors.blue),)
-
+                ? SizedBox.shrink()
+                : Text(
+                    "Didn't receive the OTP? Resend",
+                    style: TextStyle(color: Colors.blue),
+                  ),
           ],
         ),
       ),

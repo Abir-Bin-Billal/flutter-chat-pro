@@ -160,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         currentUser.uid == userModel.uid &&
         userModel.friendRequestsUIDs.isNotEmpty) {
       return buildElevatedButton(
+        width: MediaQuery.of(context).size.width * 0.7,
         onPressed: () {},
         text: "View Friend Requests",
       );
@@ -175,19 +176,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (currentUser != null &&
         currentUser.uid == userModel.uid &&
         userModel.friendsUIDs.isNotEmpty) {
-      return buildElevatedButton(onPressed: () {}, text: "View Friends");
+      return buildElevatedButton(
+        width: MediaQuery.of(context).size.width * 0.7,
+        onPressed: () {},
+        text: "View Friends",
+      );
     } else {
       if (currentUser?.uid != userModel.uid) {
-        return buildElevatedButton(
-          onPressed: () {
-            context
-                .read<AuthenticationProvider>()
-                .sendFriendRequest(friendID: userModel.uid).whenComplete(() {
-              Fluttertoast.showToast(msg: "Friend request sent");
-            });
-          },
-          text: "Send Friend Request",
-        );
+        if (userModel.friendsUIDs.contains(currentUser!.uid)) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildElevatedButton(
+                width: MediaQuery.of(context).size.width * 0.4,
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text("Unfriend ${userModel.name}?"),
+                        content: Text(
+                          "Are you sure you want to unfriend this user?",
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await context
+                                  .read<AuthenticationProvider>()
+                                  .removeFriend(friendID: userModel.uid)
+                                  .whenComplete(() {
+                                    Fluttertoast.showToast(
+                                      msg: "Unfriended ${userModel.name}",
+                                    );
+                                  });
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Unfriend"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                text: "Unfriend",
+              ),
+
+              buildElevatedButton(
+                width: MediaQuery.of(context).size.width * 0.4,
+                onPressed: () {},
+                text: "Chat",
+              ),
+            ],
+          );
+        } else if (userModel.sentFriendRequestsUIDs.contains(currentUser.uid)) {
+          return buildElevatedButton(
+            width: MediaQuery.of(context).size.width * 0.7,
+            onPressed: () async {
+              await context
+                  .read<AuthenticationProvider>()
+                  .acceptFriendRequest(friendID: userModel.uid)
+                  .whenComplete(() {
+                    Fluttertoast.showToast(
+                      msg: "You are now friend with ${userModel.name}",
+                    );
+                  });
+            },
+            text: "Accept Friend Request",
+          );
+        } else if (userModel.friendRequestsUIDs.contains(currentUser.uid)) {
+          return buildElevatedButton(
+            width: MediaQuery.of(context).size.width * 0.7,
+            onPressed: () async {
+              await context
+                  .read<AuthenticationProvider>()
+                  .cancelFriendRequest(friendID: userModel.uid)
+                  .whenComplete(() {
+                    Fluttertoast.showToast(msg: "Friend request canceled");
+                  });
+            },
+            text: "Cancel Friend Request",
+          );
+        } else {
+          return buildElevatedButton(
+            width: MediaQuery.of(context).size.width * 0.7,
+            onPressed: () async {
+              await context
+                  .read<AuthenticationProvider>()
+                  .sendFriendRequest(friendID: userModel.uid)
+                  .whenComplete(() {
+                    Fluttertoast.showToast(msg: "Friend request sent");
+                  });
+            },
+            text: "Send Friend Request",
+          );
+        }
       } else {
         return SizedBox.shrink();
       }
@@ -197,9 +285,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget buildElevatedButton({
     required VoidCallback onPressed,
     required String text,
+    required double width,
   }) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.7,
+      width: width,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.grey[300],
