@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +65,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
                         document.data()! as Map<String, dynamic>;
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: AssetImage("assets/images/user.png"),
+                        backgroundImage: MemoryImage(base64Decode(data[AppConst.image])),
                       ),
                       title: Text(
                         data[AppConst.name],

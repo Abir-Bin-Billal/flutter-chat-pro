@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/models/user_model.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icon(Icons.arrow_back),
         ),
         actions: [
-          currentUser != null && currentUser!.uid == uid
+          currentUser != null && currentUser.uid == uid
               ? IconButton(
                   onPressed: () {
                     Navigator.pushNamed(
@@ -178,7 +179,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       if (currentUser?.uid != userModel.uid) {
         return buildElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            context
+                .read<AuthenticationProvider>()
+                .sendFriendRequest(friendID: userModel.uid).whenComplete(() {
+              Fluttertoast.showToast(msg: "Friend request sent");
+            });
+          },
           text: "Send Friend Request",
         );
       } else {

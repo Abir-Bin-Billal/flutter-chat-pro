@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
               child: CircleAvatar(
-                radius: 40,
+                radius: 30,
                 backgroundImage: userModel!.image.isNotEmpty
                     ? MemoryImage(base64Decode(userModel.image))
                     : const AssetImage("assets/images/user.png")

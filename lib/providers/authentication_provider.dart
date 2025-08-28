@@ -228,6 +228,19 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> sendFriendRequest({required String friendID}) async {
+    try {
+      await firestore.collection(AppConst.users).doc(friendID).update({
+        AppConst.friendRequestsUIDS: FieldValue.arrayUnion([_uid]),
+      });
+      await firestore.collection(AppConst.users).doc(_uid).update({
+        AppConst.sentFriendRequestsUIDS: FieldValue.arrayUnion([friendID]),
+      });
+    } on FirebaseException catch (e) {
+      print("Error sending friend request: $e");
+    }
+  }
+
   Stream<DocumentSnapshot> getUserStream({required String userID}) {
     return firestore.collection(AppConst.users).doc(userID).snapshots();
   }
