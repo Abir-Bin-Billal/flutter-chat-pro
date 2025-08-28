@@ -46,6 +46,7 @@ class _OtpScreenState extends State<OtpScreen> {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
     final String verificationId = args['verificationId']!;
+    final String phoneNumber = args['phoneNumber']!;
     final AuthenticationProvider authenticationProvider =
         context.watch<AuthenticationProvider>();
     return Scaffold(
@@ -59,7 +60,7 @@ class _OtpScreenState extends State<OtpScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5),
-            Text("Enter the code that has sent to ${widget.phoneNumber} "),
+            Text("Enter the code that has sent to ${phoneNumber} "),
             SizedBox(height: 10),
             Pinput(
               length: 6,

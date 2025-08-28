@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icon(Icons.arrow_back),
         ),
         actions: [
-          currentUser!.uid == uid
+          currentUser != null && currentUser!.uid == uid
               ? IconButton(
                   onPressed: () {
                     Navigator.pushNamed(
@@ -42,9 +42,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       arguments: uid,
                     );
                   },
-                  icon: Icon(Icons.settings),
+                  icon: const Icon(Icons.settings),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
       body: uid == null
@@ -153,27 +153,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget buildFriendRequestButton({
     required UserModel userModel,
-    required UserModel currentUser,
+    UserModel? currentUser,
   }) {
-    if (currentUser.uid == userModel.uid &&
+    if (currentUser != null &&
+        currentUser.uid == userModel.uid &&
         userModel.friendRequestsUIDs.isNotEmpty) {
       return buildElevatedButton(
         onPressed: () {},
         text: "View Friend Requests",
       );
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 
   Widget buildFriendButton({
     required UserModel userModel,
-    required UserModel currentUser,
+    required UserModel? currentUser,
   }) {
-    if (currentUser.uid == userModel.uid && userModel.friendsUIDs.isNotEmpty) {
+    if (currentUser != null &&
+        currentUser.uid == userModel.uid &&
+        userModel.friendsUIDs.isNotEmpty) {
       return buildElevatedButton(onPressed: () {}, text: "View Friends");
     } else {
-      if (currentUser.uid != userModel.uid) {
+      if (currentUser?.uid != userModel.uid) {
         return buildElevatedButton(
           onPressed: () {},
           text: "Send Friend Request",
