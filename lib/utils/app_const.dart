@@ -31,3 +31,9 @@ static const String users = 'users';
 static const String userImages = 'userImages';
 static const String userModel = 'userModel';
 }
+
+enum FriendViewType{
+  friends,
+  friendRequests,
+  groupView,
+}

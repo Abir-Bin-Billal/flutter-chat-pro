@@ -161,7 +161,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         userModel.friendRequestsUIDs.isNotEmpty) {
       return buildElevatedButton(
         width: MediaQuery.of(context).size.width * 0.7,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, AppConst.friendRequestsScreen);
+        },
         text: "View Friend Requests",
       );
     } else {
@@ -173,17 +175,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required UserModel userModel,
     required UserModel? currentUser,
   }) {
-    if (currentUser != null &&
-        currentUser.uid == userModel.uid &&
-        userModel.friendsUIDs.isNotEmpty) {
+    if (currentUser!.uid == userModel.uid) {
       return buildElevatedButton(
         width: MediaQuery.of(context).size.width * 0.7,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, AppConst.friendsScreen);
+        },
         text: "View Friends",
       );
     } else {
-      if (currentUser?.uid != userModel.uid) {
-        if (userModel.friendsUIDs.contains(currentUser!.uid)) {
+      if (currentUser.uid != userModel.uid) {
+        if (userModel.friendsUIDs.contains(currentUser.uid)) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

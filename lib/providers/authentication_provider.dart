@@ -293,6 +293,47 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<UserModel>> getFriendsList(String uid) async {
+    List<UserModel> friendList = [];
+    DocumentSnapshot documentSnapshot = await firestore
+        .collection(AppConst.users)
+        .doc(uid)
+        .get();
+    List<dynamic> friendUIDs = documentSnapshot.get(AppConst.friendsUIDS);
+    for (String friendUID in friendUIDs) {
+      DocumentSnapshot documentSnapshot = await firestore
+          .collection(AppConst.users)
+          .doc(friendUID)
+          .get();
+      UserModel friend = UserModel.fromJson(
+        documentSnapshot.data() as Map<String, dynamic>,
+      );
+      friendList.add(friend);
+    }
+    return friendList;
+  }
+
+  Future<List<UserModel>> getFriendRequestsList(String uid) async {
+    List<UserModel> friendRequestList = [];
+    DocumentSnapshot documentSnapshot = await firestore
+        .collection(AppConst.users)
+        .doc(uid)
+        .get();
+    List<dynamic> friendRequestUIDs =
+        documentSnapshot.get(AppConst.friendRequestsUIDS);
+    for (String friendRequestUID in friendRequestUIDs) {
+      DocumentSnapshot documentSnapshot = await firestore
+          .collection(AppConst.users)
+          .doc(friendRequestUID)
+          .get();
+      UserModel friendRequest = UserModel.fromJson(
+        documentSnapshot.data() as Map<String, dynamic>,
+      );
+      friendRequestList.add(friendRequest);
+    }
+    return friendRequestList;
+  }
+
   Future logOut() async {
     await auth.signOut();
     FlutterSecureStorage().deleteAll();

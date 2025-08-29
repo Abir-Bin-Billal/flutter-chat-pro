@@ -1,6 +1,8 @@
 import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:flutter_chat_pro/views/auth/login_screen.dart';
 import 'package:flutter_chat_pro/views/auth/otp_screen.dart';
+import 'package:flutter_chat_pro/views/friend/friend_requests_screen.dart';
+import 'package:flutter_chat_pro/views/friend/friends_screen.dart';
 import 'package:flutter_chat_pro/views/home/home_screen.dart';
 import 'package:flutter_chat_pro/views/info/user_information_screen.dart';
 import 'package:flutter_chat_pro/views/landing/landing_screen.dart';
@@ -16,5 +18,7 @@ class AppRoutes {
     AppConst.landingScreen: (context) => const LandingScreen(),
     AppConst.profileScreen: (context) => const ProfileScreen(),
     AppConst.settingsScreen: (context) => const SettingsScreen(),
+    AppConst.friendsScreen: (context) => const FriendsScreen(),
+    AppConst.friendRequestsScreen: (context) => const FriendRequestsScreen(),
   };
 }
