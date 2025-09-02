@@ -55,7 +55,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
           }, icon: const Icon(Icons.attachment)),
           Expanded(
             child: TextFormField(
-              decoration: const InputDecoration(
+              decoration: const InputDecoration.collapsed(
                 hintText: "Type a message",
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
@@ -79,4 +79,3 @@ class _BottomChatFieldState extends State<BottomChatField> {
     );
   }
 }
-  
