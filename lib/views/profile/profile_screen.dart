@@ -231,7 +231,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               buildElevatedButton(
                 width: MediaQuery.of(context).size.width * 0.4,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppConst.chatScreen,
+                    arguments: {
+                      AppConst.contactId: userModel.uid,
+                      AppConst.contactName: userModel.name,
+                      AppConst.contactImage: userModel.image,
+                      AppConst.groupId: "",
+                    },
+                  );
+                },
                 text: "Chat",
               ),
             ],

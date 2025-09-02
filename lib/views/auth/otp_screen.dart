@@ -5,7 +5,7 @@ import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
 class OtpScreen extends StatefulWidget {
-  OtpScreen({
+  const OtpScreen({
     super.key,
     required this.phoneNumber,
     required this.verificationId,
@@ -63,7 +63,7 @@ class _OtpScreenState extends State<OtpScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5),
-            Text("Enter the code that has sent to ${phoneNumber} "),
+            Text("Enter the code that has sent to $phoneNumber "),
             SizedBox(height: 10),
             Pinput(
               length: 6,

@@ -5,7 +5,7 @@ import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:flutter_chat_pro/utils/app_routes.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';  
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         colorSchemeSeed: Colors.deepPurple,
         textTheme: GoogleFonts.poppinsTextTheme(
-          // 👈 Apply Poppins font globally
           Theme.of(context).textTheme,
         ),
       ),
@@ -42,7 +41,6 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         colorSchemeSeed: Colors.deepPurple,
         textTheme: GoogleFonts.poppinsTextTheme(
-          // 👈 Apply Poppins font globally
           Theme.of(context).textTheme,
         ),
       ),
