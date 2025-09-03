@@ -54,7 +54,7 @@ class FriendList extends StatelessWidget {
                       context,
                       AppConst.chatScreen,
                       arguments: {
-                        AppConst.contactId: friend.uid,
+                        AppConst.contactUID: friend.uid,
                         AppConst.contactName: friend.name,
                         AppConst.contactImage: friend.image,
                       },

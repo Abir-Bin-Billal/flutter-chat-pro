@@ -29,48 +29,67 @@ class MessageModel {
     required this.repliedMessageType,
   });
 
-  // Convert JSON → Model
-  factory MessageModel.fromJson(Map<String, dynamic> json) {
-    return MessageModel(
-      senderUID: json['senderUID'] ?? '',
-      senderName: json['senderName'] ?? '',
-      senderImage: json['senderImage'] ?? '',
-      contactUID: json['contactUID'] ?? '',
-      message: json['message'] ?? '',
-      messageType: _stringToMessageEnum(json['messageType']),
-      timeSent: DateTime.tryParse(json['timeSent'] ?? '') ?? DateTime.now(),
-      messageId: json['messageId'] ?? '',
-      isSeen: json['isSeen'] ?? false,
-      repliedMessage: json['repliedMessage'] ?? '',
-      repliedTo: json['repliedTo'] ?? '',
-      repliedMessageType: _stringToMessageEnum(json['repliedMessageType']),
-    );
-  }
+  /// JSON → Model
+factory MessageModel.fromJson(Map<String, dynamic> json) {
+  return MessageModel(
+    senderUID: json['senderUID'] ?? '',
+    senderName: json['senderName'] ?? '',
+    senderImage: json['senderImage'] ?? '',
+    contactUID: json['contactUID'] ?? '',
+    message: json['message'] ?? '',
+    messageType: _stringToMessageEnum(json['messageType']),
+    timeSent: DateTime.fromMillisecondsSinceEpoch(json['timeSent'] ?? 0),
+    messageId: json['messageId'] ?? '',
+    isSeen: json['isSeen'] ?? false,
+    repliedMessage: json['repliedMessage'] ?? '',
+    repliedTo: json['repliedTo'] ?? '',
+    repliedMessageType: _stringToMessageEnum(json['repliedMessageType']),
+  );
+}
 
-  // Convert Model → JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'senderUID': senderUID,
-      'senderName': senderName,
-      'senderImage': senderImage,
-      'contactUID': contactUID,
-      'message': message,
-      'messageType': messageType.name, // store enum as string
-      'timeSent': timeSent.toIso8601String(),
-      'messageId': messageId,
-      'isSeen': isSeen,
-      'repliedMessage': repliedMessage,
-      'repliedTo': repliedTo,
-      'repliedMessageType': repliedMessageType.name,
-    };
-  }
+// Convert Model → JSON
+Map<String, dynamic> toJson() {
+  return {
+    'senderUID': senderUID,
+    'senderName': senderName,
+    'senderImage': senderImage,
+    'contactUID': contactUID,
+    'message': message,
+    'messageType': messageType.name, // ✅ store as String ("text", "image", etc.)
+    'timeSent': timeSent.millisecondsSinceEpoch,
+    'messageId': messageId,
+    'isSeen': isSeen,
+    'repliedMessage': repliedMessage,
+    'repliedTo': repliedTo,
+    'repliedMessageType': repliedMessageType.name, // ✅
+  };
+}
 
-  // Helper to parse enum from string
-  static MessageEnum _stringToMessageEnum(String? type) {
-    if (type == null) return MessageEnum.text;
+copyWith({required String userId}){
+  return MessageModel(
+    senderUID: senderUID,
+    senderName: senderName,
+    senderImage: senderImage,
+    contactUID: userId,
+    message: message,
+    messageType: messageType,
+    timeSent: timeSent,
+    messageId: messageId,
+    isSeen: isSeen,
+    repliedMessage: repliedMessage,
+    repliedTo: repliedTo,
+    repliedMessageType: repliedMessageType,
+  );
+}
+
+// Helper to parse enum from string
+static MessageEnum _stringToMessageEnum(dynamic type) {
+  if (type is String) {
     return MessageEnum.values.firstWhere(
       (e) => e.name == type,
       orElse: () => MessageEnum.text,
     );
   }
+  return MessageEnum.text;
+}
 }

@@ -15,7 +15,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final contactId = args[AppConst.contactId];
+    final contactUID = args[AppConst.contactUID];
     final contactName = args[AppConst.contactName];
     final contactImage = args[AppConst.contactImage];
     final groupId = args[AppConst.groupId];
@@ -26,7 +26,8 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: ChatAppBar(contactUID: contactId)),
+        title: ChatAppBar(contactUID: contactUID),
+      ),
       body: Padding(
         padding: EdgeInsets.all(8),
         child: Column(
@@ -40,10 +41,10 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             BottomChatField(
-              contactId: contactId,
-              groupId: groupId,
-              contactName: contactName,
-              contactImage: contactImage,
+              contactUID: contactUID ?? "", // fallback to empty string
+              groupId: groupId ?? "",
+              contactName: contactName ?? "Unknown",
+              contactImage: contactImage ?? "",
             ),
           ],
         ),

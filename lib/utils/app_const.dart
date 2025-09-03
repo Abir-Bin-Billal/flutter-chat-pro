@@ -31,7 +31,6 @@ class AppConst {
   static const String userImages = 'userImages';
   static const String userModel = 'userModel';
 
-  static const String contactId = 'contactId';
   static const String groupId = 'groupId';
   static const String contactName = 'contactName';
   static const String contactImage = 'contactImage';
@@ -49,15 +48,19 @@ class AppConst {
   static const String repliedMessage = 'repliedMessage';
   static const String repliedTo = 'repliedTo';
   static const String repliedMessageType = 'repliedMessageType';
+
+
+  static const String lastMessage = 'lastMessage';
+  static const String chats = 'chats';
 }
 
 enum FriendViewType { friends, friendRequests, groupView }
-enum MessageEnum{
-  text,
-  image,
-  video,
-  file,
-}
+  enum MessageEnum{
+    text,
+    image,
+    video,
+    file,
+  }
 
 extension MessageEnumExtension on String {
   MessageEnum toMessageEnum() {
