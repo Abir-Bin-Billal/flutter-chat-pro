@@ -185,4 +185,38 @@ class ChatProvider extends ChangeNotifier {
               .toList(),
         );
   }
+
+  Stream<List<MessageModel>> getMessageStream({
+    required String userId,
+    required String contactUID,
+    required String isGroup,
+  }){
+    if(isGroup.isNotEmpty){
+      return _firestore
+          .collection(AppConst.groups)
+          .doc(contactUID)
+          .collection(AppConst.messages)
+          .orderBy('timeSent', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => MessageModel.fromJson(doc.data()))
+                .toList(),
+          );
+    }else{
+      return _firestore
+          .collection(AppConst.users)
+          .doc(userId)
+          .collection(AppConst.chats)
+          .doc(contactUID)
+          .collection(AppConst.messages)
+          .orderBy('timeSent', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => MessageModel.fromJson(doc.data()))
+                .toList(),
+          );
+    }
+  }
 }

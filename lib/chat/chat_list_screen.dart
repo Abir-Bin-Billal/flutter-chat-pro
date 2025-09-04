@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
@@ -48,24 +49,42 @@ class _ChatListScreenState extends State<ChatListScreen> {
                   return ListView.builder(
                     itemCount: data.length,
                     itemBuilder: (context, index) {
-                      
                       final chat = data[index];
                       final isMe = chat.senderUID == uid;
-                      final lastMessage = isMe ? "You: ${chat.message}" : chat.message;
+                      final lastMessage = isMe
+                          ? "You: ${chat.message}"
+                          : chat.message;
+                      final dateTime = formatDate(chat.timeSent, [
+                        hh,
+                        ':',
+                        nn,
+                        ' ',
+                        am,
+                      ]);
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: MemoryImage(base64Decode(chat.contactImage)),
+                          backgroundImage: MemoryImage(
+                            base64Decode(chat.contactImage),
+                          ),
                         ),
                         title: Text(chat.contactName),
-                        subtitle: Text(lastMessage, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                        trailing: Text(chat.timeSent.toString()),
+                        subtitle: Text(
+                          lastMessage,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Text(dateTime),
                         onTap: () {
-                          Navigator.pushNamed(context, AppConst.chatScreen , arguments: {
-                            'contactUID': chat.contactUID,
-                            'contactName': chat.contactName,
-                            'contactImage': chat.contactImage,
-                            'groupId': chat.groupId,
-                          });
+                          Navigator.pushNamed(
+                            context,
+                            AppConst.chatScreen,
+                            arguments: {
+                              'contactUID': chat.contactUID,
+                              'contactName': chat.contactName,
+                              'contactImage': chat.contactImage,
+                              'groupId': "",
+                            },
+                          );
                         },
                       );
                     },

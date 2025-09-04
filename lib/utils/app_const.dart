@@ -50,18 +50,14 @@ class AppConst {
   static const String repliedTo = 'repliedTo';
   static const String repliedMessageType = 'repliedMessageType';
 
-
   static const String lastMessage = 'lastMessage';
   static const String chats = 'chats';
+  static const String groups = 'groups';
 }
 
 enum FriendViewType { friends, friendRequests, groupView }
-  enum MessageEnum{
-    text,
-    image,
-    video,
-    file,
-  }
+
+enum MessageEnum { text, image, video, file }
 
 extension MessageEnumExtension on String {
   MessageEnum toMessageEnum() {
