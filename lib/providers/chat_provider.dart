@@ -196,7 +196,6 @@ class ChatProvider extends ChangeNotifier {
           .collection(AppConst.groups)
           .doc(contactUID)
           .collection(AppConst.messages)
-          .orderBy('timeSent', descending: true)
           .snapshots()
           .map(
             (snapshot) => snapshot.docs
