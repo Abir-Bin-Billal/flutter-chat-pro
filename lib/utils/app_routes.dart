@@ -1,3 +1,4 @@
+import 'package:flutter_chat_pro/chat/chat_list_screen.dart';
 import 'package:flutter_chat_pro/chat/chat_screen.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:flutter_chat_pro/views/auth/login_screen.dart';
@@ -22,5 +23,6 @@ class AppRoutes {
     AppConst.friendsScreen: (context) => const FriendsScreen(),
     AppConst.friendRequestsScreen: (context) => const FriendRequestsScreen(),
     AppConst.chatScreen: (context) => const ChatScreen(),
+    AppConst.chatListScreen: (context) => const ChatListScreen(),
   };
 }

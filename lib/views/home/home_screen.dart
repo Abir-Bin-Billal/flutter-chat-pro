@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
-import 'package:flutter_chat_pro/views/chat_list/chat_list_screen.dart';
+import 'package:flutter_chat_pro/chat/chat_list_screen.dart';
 import 'package:flutter_chat_pro/views/group/group_list_screen.dart';
 import 'package:flutter_chat_pro/views/people/people_screen.dart';
 import 'package:provider/provider.dart';

@@ -98,7 +98,9 @@ class ChatProvider extends ChangeNotifier {
     required Function(String p1) onError,
   }) async {
     try {
-      final contactMessageModel = messageModel.copyWith(userId: messageModel.senderUID);
+      final contactMessageModel = messageModel.copyWith(
+        userId: messageModel.senderUID,
+      );
 
       final sendLastMessage = LastMessageModel(
         senderUID: messageModel.senderUID,
@@ -118,56 +120,69 @@ class ChatProvider extends ChangeNotifier {
       );
 
       // run transaction
-     
-    await _firestore.runTransaction((transaction) async {
-      // Sender’s chat messages
-      transaction.set(
-        _firestore
-            .collection(AppConst.users)
-            .doc(messageModel.senderUID)
-            .collection(AppConst.chats)
-            .doc(contactUID)
-            .collection(AppConst.messages)
-            .doc(messageModel.messageId),
-        messageModel.toJson(),
-      );
 
-      // Receiver’s chat messages
-      transaction.set(
-        _firestore
-            .collection(AppConst.users)
-            .doc(contactUID)
-            .collection(AppConst.chats)
-            .doc(messageModel.senderUID)
-            .collection(AppConst.messages)
-            .doc(messageModel.messageId),
-        contactMessageModel.toJson(),
-      );
+      await _firestore.runTransaction((transaction) async {
+        // Sender’s chat messages
+        transaction.set(
+          _firestore
+              .collection(AppConst.users)
+              .doc(messageModel.senderUID)
+              .collection(AppConst.chats)
+              .doc(contactUID)
+              .collection(AppConst.messages)
+              .doc(messageModel.messageId),
+          messageModel.toJson(),
+        );
 
-      // Update sender’s last message
-      transaction.set(
-        _firestore
-            .collection(AppConst.users)
-            .doc(messageModel.senderUID)
-            .collection(AppConst.chats)
-            .doc(contactUID),
-        sendLastMessage.toJson(),
-      );
+        // Receiver’s chat messages
+        transaction.set(
+          _firestore
+              .collection(AppConst.users)
+              .doc(contactUID)
+              .collection(AppConst.chats)
+              .doc(messageModel.senderUID)
+              .collection(AppConst.messages)
+              .doc(messageModel.messageId),
+          contactMessageModel.toJson(),
+        );
 
-      // Update receiver’s last message
-      transaction.set(
-        _firestore
-            .collection(AppConst.users)
-            .doc(contactUID)
-            .collection(AppConst.chats)
-            .doc(messageModel.senderUID),
-        contactLastMessage.toJson(),
-      );
-    });
+        // Update sender’s last message
+        transaction.set(
+          _firestore
+              .collection(AppConst.users)
+              .doc(messageModel.senderUID)
+              .collection(AppConst.chats)
+              .doc(contactUID),
+          sendLastMessage.toJson(),
+        );
 
+        // Update receiver’s last message
+        transaction.set(
+          _firestore
+              .collection(AppConst.users)
+              .doc(contactUID)
+              .collection(AppConst.chats)
+              .doc(messageModel.senderUID),
+          contactLastMessage.toJson(),
+        );
+      });
     } catch (e) {
       onError(e.toString());
       print("Error in handleContactMessage: $e");
     }
+  }
+
+  Stream<List<LastMessageModel>> getChatListSteam(String userId) {
+    return _firestore
+        .collection(AppConst.users)
+        .doc(userId)
+        .collection(AppConst.chats)
+        .orderBy('timeSent', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => LastMessageModel.fromJson(doc.data()))
+              .toList(),
+        );
   }
 }

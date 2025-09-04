@@ -13,6 +13,7 @@ class AppConst {
   static const String settingsScreen = '/settingsScreen';
   static const String aboutScreen = '/aboutScreen';
   static const String privacyPolicyScreen = '/privacyPolicyScreen';
+  static const String chatListScreen = '/chatListScreen';
   static const String termsAndConditionsScreen = '/termsAndConditionsScreen';
   static const String uid = 'uid';
   static const String name = 'name';
