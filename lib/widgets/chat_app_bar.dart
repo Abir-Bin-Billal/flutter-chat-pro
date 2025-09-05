@@ -36,12 +36,8 @@ class _ChatAppBarState extends State<ChatAppBar> {
         return Row(
           children: [
             CircleAvatar(
-              backgroundImage: userModel.image != null
-                  ? MemoryImage(base64Decode(userModel.image))
-                  : null,
-              child: userModel.image == null
-                  ? Icon(Icons.person, size: 80)
-                  : null,
+              backgroundImage: MemoryImage(base64Decode(userModel.image)),
+              child: Icon(Icons.person, size: 80),
             ),
             SizedBox(width: 10),
             Column(
