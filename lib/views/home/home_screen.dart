@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
-import 'package:flutter_chat_pro/chat/chat_list_screen.dart';
+import 'package:flutter_chat_pro/chat/my_chat_screen.dart';
 import 'package:flutter_chat_pro/views/group/group_list_screen.dart';
 import 'package:flutter_chat_pro/views/people/people_screen.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    ChatListScreen(),
+    MyChatScreen(),
     GroupListScreen(),
     PeopleScreen(),
   ];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/models/message_model.dart';
+import 'package:flutter_chat_pro/models/message_reply_model.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/providers/chat_provider.dart';
 import 'package:flutter_chat_pro/utils/global_methods.dart';
@@ -57,11 +58,47 @@ class _ChatListState extends State<ChatList> {
             return isMe
                 ? Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
-                    child: MyMessageWidget(message: element),
+                    child: MyMessageWidget(
+                      message: element,
+                      onRightSwipe: () {
+                        final messageReply = MessageReplyModel(
+                          senderUID: element.senderUID,
+                          message: element.message,
+                          senderName: context
+                              .read<AuthenticationProvider>()
+                              .userModel!
+                              .name,
+                          isMe: true,
+                          senderImage: element.senderImage,
+                          messageType: element.messageType,
+                        );
+                        context.read<ChatProvider>().setMessageReplyModel(
+                          messageReply,
+                        );
+                      },
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
-                    child: ContactMessageWidget(message: element),
+                    child: ContactMessageWidget(
+                      message: element,
+                      onRightSwipe: () {
+                        final messageReply = MessageReplyModel(
+                          senderUID: element.senderUID,
+                          message: element.message,
+                          senderName: context
+                              .read<AuthenticationProvider>()
+                              .userModel!
+                              .name,
+                          isMe: true,
+                          senderImage: element.senderImage,
+                          messageType: element.messageType,
+                        );
+                        context.read<ChatProvider>().setMessageReplyModel(
+                          messageReply,
+                        );
+                      },
+                    ),
                   );
           },
           itemComparator: (item1, item2) {

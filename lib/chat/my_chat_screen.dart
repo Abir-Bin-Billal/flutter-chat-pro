@@ -8,14 +8,14 @@ import 'package:flutter_chat_pro/providers/chat_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:provider/provider.dart';
 
-class ChatListScreen extends StatefulWidget {
-  const ChatListScreen({super.key});
+class MyChatScreen extends StatefulWidget {
+  const MyChatScreen({super.key});
 
   @override
-  State<ChatListScreen> createState() => _ChatListScreenState();
+  State<MyChatScreen> createState() => _MyChatScreenState();
 }
 
-class _ChatListScreenState extends State<ChatListScreen> {
+class _MyChatScreenState extends State<MyChatScreen> {
   @override
   Widget build(BuildContext context) {
     final uid = context.read<AuthenticationProvider>().userModel?.uid;

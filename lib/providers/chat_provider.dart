@@ -190,8 +190,8 @@ class ChatProvider extends ChangeNotifier {
     required String userId,
     required String contactUID,
     required String isGroup,
-  }){
-    if(isGroup.isNotEmpty){
+  }) {
+    if (isGroup.isNotEmpty) {
       return _firestore
           .collection(AppConst.groups)
           .doc(contactUID)
@@ -202,7 +202,7 @@ class ChatProvider extends ChangeNotifier {
                 .map((doc) => MessageModel.fromJson(doc.data()))
                 .toList(),
           );
-    }else{
+    } else {
       return _firestore
           .collection(AppConst.users)
           .doc(userId)
