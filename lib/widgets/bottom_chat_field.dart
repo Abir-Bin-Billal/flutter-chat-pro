@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/providers/chat_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
+import 'package:flutter_chat_pro/widgets/message_reply_preview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
@@ -26,31 +27,30 @@ class _BottomChatFieldState extends State<BottomChatField> {
   late TextEditingController _textEditingController;
   FocusNode? _focusNode;
 
-void sendTextMessage() async {
-  print("Sending message: '${_textEditingController.text.trim()}'");
-  final currentUser = context.read<AuthenticationProvider>().userModel!;
-  final ChatProvider chatProvider = context.read<ChatProvider>();
+  void sendTextMessage() async {
+    print("Sending message: '${_textEditingController.text.trim()}'");
+    final currentUser = context.read<AuthenticationProvider>().userModel!;
+    final ChatProvider chatProvider = context.read<ChatProvider>();
 
-  chatProvider.sendTextMessage(
-    sender: currentUser,
-    message: _textEditingController.text,
-    contactUID: widget.contactUID,
-    contactName: widget.contactName,
-    contactImage: widget.contactImage,
-    messageType: MessageEnum.text,
-    groupId: widget.groupId,
-    onSuccess: () {
-      _textEditingController.clear();
-      _focusNode?.requestFocus();
-      print("Message sent successfully");
-    },
-    onError: (error) {
-      Fluttertoast.showToast(msg: error.toString());
-      print("Error sending message: $error");
-    },
-  );
-}
-
+    chatProvider.sendTextMessage(
+      sender: currentUser,
+      message: _textEditingController.text,
+      contactUID: widget.contactUID,
+      contactName: widget.contactName,
+      contactImage: widget.contactImage,
+      messageType: MessageEnum.text,
+      groupId: widget.groupId,
+      onSuccess: () {
+        _textEditingController.clear();
+        _focusNode?.requestFocus();
+        print("Message sent successfully");
+      },
+      onError: (error) {
+        Fluttertoast.showToast(msg: error.toString());
+        print("Error sending message: $error");
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -68,74 +68,83 @@ void sendTextMessage() async {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: Theme.of(context).cardColor,
-        border: Border.all(color: Theme.of(context).primaryColor),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return Container(
-                    height: 200,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: Icon(Icons.image),
-                          title: Text("Gallery"),
-                          onTap: () {
-                            // Handle gallery tap
-                          },
+    return Consumer<ChatProvider>(
+      builder: (context, chatProvider, child) {
+        final messageReply = chatProvider.messageReplyModel;
+        final isReplying = messageReply != null;
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Theme.of(context).cardColor,
+            border: Border.all(color: Theme.of(context).primaryColor),
+          ),
+          margin: EdgeInsets.only(bottom: 5),
+          child: Column(
+            children: [
+              if (isReplying) const MessageReplyPreview(),
+              SizedBox(height: isReplying ? 8 : 0),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            height: 200,
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: Icon(Icons.image),
+                                  title: Text("Gallery"),
+                                  onTap: () {},
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.camera),
+                                  title: Text("Camera"),
+                                  onTap: () {},
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.attachment),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _textEditingController,
+                      focusNode: _focusNode,
+                      decoration: const InputDecoration.collapsed(
+                        hintText: "Type a message",
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
                         ),
-                        ListTile(
-                          leading: Icon(Icons.camera),
-                          title: Text("Camera"),
-                          onTap: () {
-                            // Handle camera tap
-                          },
-                        ),
-                      ],
+                      ),
                     ),
-                  );
-                },
-              );
-            },
-            icon: const Icon(Icons.attachment),
-          ),
-          Expanded(
-            child: TextFormField(
-              controller: _textEditingController,
-              focusNode: _focusNode,
-              decoration: const InputDecoration.collapsed(
-                hintText: "Type a message",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                ),
+                  ),
+                  InkWell(
+                    onTap: sendTextMessage,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      margin: EdgeInsets.all(5),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.arrow_upward, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
-          InkWell(
-            onTap: sendTextMessage,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: Theme.of(context).primaryColor,
-              ),
-              margin: EdgeInsets.all(5),
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.arrow_upward, color: Colors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

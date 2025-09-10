@@ -33,14 +33,11 @@ class _ChatScreenState extends State<ChatScreen> {
         title: ChatAppBar(contactUID: contactUID),
       ),
       body: Padding(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(5),
         child: Column(
           children: [
             Expanded(
-              child: ChatList(
-                contactUID: contactUID,
-                groupId:  groupId ?? "",
-              ),
+              child: ChatList(contactUID: contactUID, groupId: groupId ?? ""),
             ),
             BottomChatField(
               contactUID: contactUID,
