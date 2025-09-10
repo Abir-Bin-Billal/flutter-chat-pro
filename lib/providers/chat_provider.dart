@@ -18,6 +18,7 @@ class ChatProvider extends ChangeNotifier {
     _messageReplyModel = messageReply;
     notifyListeners();
   }
+
   void clearMessageReply() {
     _messageReplyModel = null;
     notifyListeners();
@@ -123,7 +124,37 @@ class ChatProvider extends ChangeNotifier {
         contactImage: messageModel.senderImage,
       );
 
-      // run transaction
+      await _firestore
+          .collection(AppConst.users)
+          .doc(messageModel.senderUID)
+          .collection(AppConst.chats)
+          .doc(contactUID)
+          .collection(AppConst.messages)
+          .doc(messageModel.messageId)
+          .set(messageModel.toJson());
+
+      await _firestore
+          .collection(AppConst.users)
+          .doc(contactUID)
+          .collection(AppConst.chats)
+          .doc(messageModel.senderUID)
+          .collection(AppConst.messages)
+          .doc(messageModel.messageId)
+          .set(contactMessageModel.toJson());
+
+      await _firestore
+          .collection(AppConst.users)
+          .doc(messageModel.senderUID)
+          .collection(AppConst.chats)
+          .doc(contactUID)
+          .set(sendLastMessage.toJson());
+
+       await _firestore
+          .collection(AppConst.users)
+          .doc(contactUID)
+          .collection(AppConst.chats)
+          .doc(messageModel.senderUID)
+          .set(contactLastMessage.toJson());   
 
       await _firestore.runTransaction((transaction) async {
         // Sender’s chat messages
