@@ -27,9 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final bool isGroupChat = groupId != null && groupId.isNotEmpty;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: ChatAppBar(contactUID: contactUID),
       ),
       body: Padding(

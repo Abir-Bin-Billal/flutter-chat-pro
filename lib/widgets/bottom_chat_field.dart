@@ -44,11 +44,13 @@ class _BottomChatFieldState extends State<BottomChatField> {
         _textEditingController.clear();
         _focusNode?.requestFocus();
         print("Message sent successfully");
+        chatProvider.clearMessageReply(); 
       },
       onError: (error) {
         Fluttertoast.showToast(msg: error.toString());
         print("Error sending message: $error");
       },
+
     );
   }
 

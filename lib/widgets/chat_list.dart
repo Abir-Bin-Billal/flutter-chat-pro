@@ -52,7 +52,9 @@ class _ChatListState extends State<ChatList> {
             message.timeSent.day,
           ),
           groupHeaderBuilder: (dynamic groupedByValue) =>
-              buildDateTime(groupedByValue),
+              SizedBox(
+                height: 40,
+                child: buildDateTime(groupedByValue)),
           itemBuilder: (context, dynamic element) {
             final isMe = element.senderUID == uid;
             return isMe
@@ -60,10 +62,10 @@ class _ChatListState extends State<ChatList> {
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
                     child: MyMessageWidget(
                       message: element,
-                      onRightSwipe: () {
+                      onRightSwipe: (message) {
                         final messageReply = MessageReplyModel(
-                          senderUID: element.senderUID,
-                          message: element.message,
+                          senderUID: message.senderUID,
+                          message: message.message,
                           senderName: context
                               .read<AuthenticationProvider>()
                               .userModel!

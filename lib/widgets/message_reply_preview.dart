@@ -14,7 +14,9 @@ class MessageReplyPreview extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor.withOpacity(0.9),
+            color: isMe
+                ? Theme.of(context).primaryColor.withOpacity(0.1)
+                : Colors.grey.shade200,
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(30),
               topRight: const Radius.circular(30),

@@ -18,6 +18,10 @@ class ChatProvider extends ChangeNotifier {
     _messageReplyModel = messageReply;
     notifyListeners();
   }
+  void clearMessageReply() {
+    _messageReplyModel = null;
+    notifyListeners();
+  }
 
   void setLoading(bool loading) {
     _isLoading = loading;

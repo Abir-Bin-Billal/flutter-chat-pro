@@ -31,9 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userModel = authProvider.userModel;
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: const Text("Flutter Chat Pro"),
         actions: [
           Padding(
@@ -67,7 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
         children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
         currentIndex: _currentIndex,
         onTap: (index) {
           _pageController.jumpToPage(index);

@@ -20,7 +20,6 @@ class _MyChatScreenState extends State<MyChatScreen> {
   Widget build(BuildContext context) {
     final uid = context.read<AuthenticationProvider>().userModel?.uid;
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(

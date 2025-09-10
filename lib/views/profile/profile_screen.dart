@@ -22,9 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final currentUser = context.read<AuthenticationProvider>().userModel;
     final uid = ModalRoute.of(context)!.settings.arguments as String?;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text("Profile"),
         centerTitle: true,
         leading: IconButton(
@@ -127,6 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w600,
+                            color: Colors.grey[700],
                           ),
                         ),
                         SizedBox(width: 10),
@@ -143,6 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
+                        color: Colors.grey[600],
                       ),
                     ),
                   ],
