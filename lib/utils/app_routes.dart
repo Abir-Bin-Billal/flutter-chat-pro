@@ -1,8 +1,8 @@
-import 'package:flutter_chat_pro/chat/my_chat_screen.dart';
-import 'package:flutter_chat_pro/chat/chat_screen.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
 import 'package:flutter_chat_pro/views/auth/login_screen.dart';
 import 'package:flutter_chat_pro/views/auth/otp_screen.dart';
+import 'package:flutter_chat_pro/views/chat/chat_screen.dart';
+import 'package:flutter_chat_pro/views/chat/my_chat_screen.dart';
 import 'package:flutter_chat_pro/views/friend/friend_requests_screen.dart';
 import 'package:flutter_chat_pro/views/friend/friends_screen.dart';
 import 'package:flutter_chat_pro/views/home/home_screen.dart';

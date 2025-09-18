@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/models/user_model.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
@@ -33,6 +34,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
         final userModel = UserModel.fromJson(
           snapshot.data!.data() as Map<String, dynamic>,
         );
+        DateTime lastSeen = DateTime.fromMillisecondsSinceEpoch(int.parse(userModel.lastSeen));
         return Row(
           children: [
             CircleAvatar(
@@ -48,8 +50,10 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "Online",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  userModel.isOnline ? "Online" : "last seen ${timeago.format(lastSeen)}",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400,
+                  color: userModel.isOnline ? Colors.green : Colors.grey
+                  ),
                 ),
               ],
             ),

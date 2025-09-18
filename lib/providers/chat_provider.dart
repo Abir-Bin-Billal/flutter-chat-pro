@@ -94,6 +94,56 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
+  // set message as seen
+  Future<void> setMessageSeen({
+    required String userId,
+    required String contactUID,
+    required String messageId,
+    required String groupId,
+  }) async {
+    try {
+  if(groupId.isNotEmpty){
+    return;
+  }
+      await _firestore
+          .collection(AppConst.users)
+          .doc(userId)
+          .collection(AppConst.chats)
+          .doc(contactUID)
+          .collection(AppConst.messages)
+          .doc(messageId)
+          .update({'isSeen': true});
+
+          //update contact message as sene
+      await _firestore
+          .collection(AppConst.users)
+          .doc(contactUID)
+          .collection(AppConst.chats)
+          .doc(userId)
+          .collection(AppConst.messages)
+          .doc(messageId)
+          .update({'isSeen': true});
+
+          // update last message as seen for current user
+      await _firestore
+          .collection(AppConst.users)
+          .doc(userId)
+          .collection(AppConst.chats)
+          .doc(contactUID)
+          .update({'isSeen': true});
+
+          //update last message as seen for contact
+      await _firestore
+          .collection(AppConst.users)
+          .doc(contactUID)
+          .collection(AppConst.chats)
+          .doc(userId)
+          .update({'isSeen': true});
+    } catch (e) {
+      print("Error in setMessageSeen: $e");
+    }
+  }
+
   Future<void> handleContactMessage({
     required MessageModel messageModel,
     required String contactUID,

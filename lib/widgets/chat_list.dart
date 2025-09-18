@@ -74,6 +74,14 @@ class _ChatListState extends State<ChatList> {
             groupHeaderBuilder: (dynamic groupedByValue) =>
                 SizedBox(height: 40, child: buildDateTime(groupedByValue)),
             itemBuilder: (context, dynamic element) {
+              if (!element.isSeen && element.senderUID != uid) {
+                context.read<ChatProvider>().setMessageSeen(
+                      userId: uid,
+                      contactUID: widget.contactUID,
+                      messageId: element.messageId,
+                       groupId: widget.groupId,
+                    );
+              }
               final isMe = element.senderUID == uid;
               return isMe
                   ? Padding(

@@ -70,7 +70,6 @@ class AuthenticationProvider extends ChangeNotifier {
         codeAutoRetrievalTimeout: (String verificationId) {
           _isLoading = false;
           notifyListeners();
-          print("Navigate to OTP screen");
         },
       );
     } catch (e) {
@@ -177,9 +176,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
     try {
       String imageUrl = await storeFileFirestore(file: fileImage, uid: _uid!);
-
-      print("Image uploaded successfully: $imageUrl");
-
       userModel.image = imageUrl;
       userModel.uid = _uid!;
       userModel.lastSeen = DateTime.now().millisecondsSinceEpoch.toString();
@@ -332,6 +328,18 @@ class AuthenticationProvider extends ChangeNotifier {
       friendRequestList.add(friendRequest);
     }
     return friendRequestList;
+  }
+
+  // set user online status
+  Future<void> updateUserStatus({required bool value}) async {
+    try {
+      await firestore.collection(AppConst.users).doc(auth.currentUser!.uid).update({
+        AppConst.isOnline: value,
+        AppConst.lastSeen: DateTime.now().millisecondsSinceEpoch.toString(),
+      });
+    } catch (e) {
+      print("Error updating online status: $e");
+    }
   }
 
   Future logOut() async {

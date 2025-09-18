@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_pro/providers/authentication_provider.dart';
 import 'package:flutter_chat_pro/utils/app_const.dart';
-import 'package:flutter_chat_pro/chat/my_chat_screen.dart';
+import 'package:flutter_chat_pro/views/chat/my_chat_screen.dart';
 import 'package:flutter_chat_pro/views/group/group_list_screen.dart';
 import 'package:flutter_chat_pro/views/people/people_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +14,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, TickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentIndex = 0;
   final List<Widget> _pages = [
@@ -23,6 +22,35 @@ class _HomeScreenState extends State<HomeScreen> {
     GroupListScreen(),
     PeopleScreen(),
   ];
+
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+   switch (state) {
+      case AppLifecycleState.resumed:
+        context.read<AuthenticationProvider>().updateUserStatus(value: true);
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+        context.read<AuthenticationProvider>().updateUserStatus(value: false);
+        break;
+        default:
+          break;
+    }
+    super.didChangeAppLifecycleState(state);
+  }
 
   @override
   Widget build(BuildContext context) {
